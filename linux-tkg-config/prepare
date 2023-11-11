@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # List of kernels that are maintained upstream
-_current_kernels=("6.6" "6.5" "6.4" "6.1" "5.15")
-
+_current_kernels=("6.6")
+#_current_kernels=("6.6" "6.5" "6.4" "6.1" "5.15")
 # List of kernels that are no longer maintained either upstream or locally
 _eol_kernels=("6.3" "6.2" "6.0" "5.19" "5.18" "5.17" "5.16" "5.14" "5.13" "5.12" "5.11" "5.9" "5.8" "5.7" "5.4.230" "5.10.135")
 
@@ -714,7 +714,10 @@ _tkg_srcprep() {
     tkgpatch="$srcdir/0003-glitched-base-nonrt.patch"
     _msg="Applying glitched base non-rt additions patch" && _tkg_patcher
   fi
-
+  if (( 660 <= "$_kver" )) ; then
+		tkgpatch="$srcdir/0014-fedora-rpm.patch"
+  	_msg="RPM: Patching the 013-fedora-rpm.patch for kernels => 6.6.0" && _tkg_patcher
+  fi
   tkgpatch="$srcdir/0013-fedora-rpm.patch"
   _msg="RPM: fixing spec generator" && _tkg_patcher
 
@@ -1756,7 +1759,42 @@ CONFIG_DEBUG_INFO_BTF_MODULES=y\r
   msg2 "Setting config"
   make ${_config_updating} ${llvm_opt} |& tee -a "$_where"/logs/prepare.log.txt
 
-  # menuconfig / nconfig
+  # Modify the config file to fit Fedora SELinux configuration
+  if [ "$_distro" = "Fedora" ] ; then
+  	if (( 660 <= "$_kver" )) ; then
+  		tkgpatch="$srcdir/0014-fedora-rpm2.patch"
+    	_msg="Patching scripts/package/kernel.spec for Fedora SRPM kernels" && _tkg_patcher
+  	fi
+    msg2 "SELinux activation for Fedora"
+    _enable "AUDIT"
+    _enable "SECURITY_SELINUX"
+    _enable "DEFAULT_SECURITY_SELINUX"
+    _disable "DEFAULT_SECURITY_DAC"
+    scripts/config --set-str "LSM" "lockdown,yama,integrity,selinux,bpf,landlock"
+    msg2 "ZRAM/ZSWAP activation for Fedora"
+    # remove Arch configuration
+    _disable "ZRAM_DEF_COMP_ZSTD"
+    _undefine "ZRAM_DEF_COMP"
+    _undefine "ZRAM_WRITEBACK"
+    _undefine "ZSWAP_DEFAULT_ON"
+    _undefine "ZSWAP_COMPRESSOR_DEFAULT_ZSTD"
+		_disable "ZSWAP_ZPOOL_DEFAULT_ZSMALLOC"
+		# Add Fedora configuration
+    _enable "ZRAM_DEF_COMP_LZORLE"
+    _module "ZRAM"
+    _enable "ZRAM_MULTI_COMP"
+    scripts/config --set-val "ZSMALLOC_CHAIN_SIZE" "8"
+    _enable "ZSMALLOC"
+    _enable "ZSWAP_COMPRESSOR_DEFAULT_LZO"
+    _enable "ZSWAP_EXCLUSIVE_LOADS_DEFAULT_ON"
+    _enable "ZSWAP"
+    _enable "ZSWAP_ZPOOL_DEFAULT_ZBUD"
+    # new configurations
+		scripts/config --set-str "ZSWAP_COMPRESSOR_DEFAULT" "lzo"
+		scripts/config --set-str "ZSWAP_ZPOOL_DEFAULT" "zbud"
+  fi
+
+# menuconfig / nconfig
   if [ -z "$_menunconfig" ]; then
     plain ""
     plain "*Optional* For advanced users - Do you want to use make menuconfig or nconfig"
