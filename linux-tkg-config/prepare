@@ -714,10 +714,7 @@ _tkg_srcprep() {
     tkgpatch="$srcdir/0003-glitched-base-nonrt.patch"
     _msg="Applying glitched base non-rt additions patch" && _tkg_patcher
   fi
-  if (( 660 <= "$_kver" )) ; then
-		tkgpatch="$srcdir/0014-fedora-rpm.patch"
-  	_msg="RPM: Patching the 013-fedora-rpm.patch for kernels => 6.6.0" && _tkg_patcher
-  fi
+
   tkgpatch="$srcdir/0013-fedora-rpm.patch"
   _msg="RPM: fixing spec generator" && _tkg_patcher
 
@@ -1761,10 +1758,6 @@ CONFIG_DEBUG_INFO_BTF_MODULES=y\r
 
   # Modify the config file to fit Fedora SELinux configuration
   if [ "$_distro" = "Fedora" ] ; then
-  	if (( 660 <= "$_kver" )) ; then
-  		tkgpatch="$srcdir/0014-fedora-rpm2.patch"
-    	_msg="Patching scripts/package/kernel.spec for Fedora SRPM kernels" && _tkg_patcher
-  	fi
     msg2 "SELinux activation for Fedora"
     _enable "AUDIT"
     _enable "SECURITY_SELINUX"
@@ -1775,8 +1768,8 @@ CONFIG_DEBUG_INFO_BTF_MODULES=y\r
     # remove Arch configuration
     _disable "ZRAM_DEF_COMP_ZSTD"
     _undefine "ZRAM_DEF_COMP"
-    _undefine "ZRAM_WRITEBACK"
-    _undefine "ZSWAP_DEFAULT_ON"
+    _disable "ZRAM_WRITEBACK" # ask NO
+    _disable "ZSWAP_DEFAULT_ON" # ask NO
     _undefine "ZSWAP_COMPRESSOR_DEFAULT_ZSTD"
 		_disable "ZSWAP_ZPOOL_DEFAULT_ZSMALLOC"
 		# Add Fedora configuration
@@ -1790,7 +1783,7 @@ CONFIG_DEBUG_INFO_BTF_MODULES=y\r
     _enable "ZSWAP"
     _enable "ZSWAP_ZPOOL_DEFAULT_ZBUD"
     # new configurations
-		scripts/config --set-str "ZSWAP_COMPRESSOR_DEFAULT" "lzo"
+		scripts/config --set-str "ZSWAP_COMPRESSOR_DEFAULT" "LZO" #ask =lzo
 		scripts/config --set-str "ZSWAP_ZPOOL_DEFAULT" "zbud"
   fi
 
