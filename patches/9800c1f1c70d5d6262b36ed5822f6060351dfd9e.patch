@@ -1,0 +1,26 @@
+From 9800c1f1c70d5d6262b36ed5822f6060351dfd9e Mon Sep 17 00:00:00 2001
+From: Virtuoz-Ier <31992435+Virtuoz-Ier@users.noreply.github.com>
+Date: Fri, 10 Nov 2023 20:15:21 +0100
+Subject: [PATCH] 6.6: Fix for Fedora and OpenSuse
+
+---
+ install.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/install.sh b/install.sh
+index e9b61a9b..65b95444 100755
+--- a/install.sh
++++ b/install.sh
+@@ -244,10 +244,10 @@ if [ "$1" = "install" ]; then
+       _extra_ver_str="_${_kernel_flavor}"
+     fi
+ 
+-    _fedora_work_dir="$_kernel_work_folder_abs/linux-tkg-rpmbuild"
++    _fedora_work_dir="$_kernel_work_folder_abs/rpmbuild"
+ 
+     msg2 "Add patched files to the diff.patch"
+-    (cd ${_kernel_work_folder_abs} && git add -- . ':!linux-tkg-rpmbuild')
++    (cd ${_kernel_work_folder_abs} && git add -- . ':!rpmbuild')
+ 
+     msg2 "Building kernel RPM packages"
+     RPMOPTS="--define '_topdir ${_fedora_work_dir}'" make ${llvm_opt} -j ${_thread_num} rpm-pkg EXTRAVERSION="${_extra_ver_str}"

@@ -1768,8 +1768,8 @@ CONFIG_DEBUG_INFO_BTF_MODULES=y\r
     # remove Arch configuration
     _disable "ZRAM_DEF_COMP_ZSTD"
     _undefine "ZRAM_DEF_COMP"
-    _disable "ZRAM_WRITEBACK" # ask NO
-    _disable "ZSWAP_DEFAULT_ON" # ask NO
+    _disable "ZRAM_WRITEBACK"
+    _disable "ZSWAP_DEFAULT_ON"
     _undefine "ZSWAP_COMPRESSOR_DEFAULT_ZSTD"
 		_disable "ZSWAP_ZPOOL_DEFAULT_ZSMALLOC"
 		# Add Fedora configuration
@@ -1779,11 +1779,12 @@ CONFIG_DEBUG_INFO_BTF_MODULES=y\r
     scripts/config --set-val "ZSMALLOC_CHAIN_SIZE" "8"
     _enable "ZSMALLOC"
     _enable "ZSWAP_COMPRESSOR_DEFAULT_LZO"
-    _enable "ZSWAP_EXCLUSIVE_LOADS_DEFAULT_ON"
+		# new configuration
+		scripts/config --set-str "ZSWAP_COMPRESSOR_DEFAULT" "lzo"
+		_enable "ZSWAP_EXCLUSIVE_LOADS_DEFAULT_ON"
     _enable "ZSWAP"
     _enable "ZSWAP_ZPOOL_DEFAULT_ZBUD"
-    # new configurations
-		scripts/config --set-str "ZSWAP_COMPRESSOR_DEFAULT" "LZO" #ask =lzo
+    # new configuration
 		scripts/config --set-str "ZSWAP_ZPOOL_DEFAULT" "zbud"
   fi
 
