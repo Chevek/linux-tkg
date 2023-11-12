@@ -1764,7 +1764,7 @@ CONFIG_DEBUG_INFO_BTF_MODULES=y\r
     _enable "DEFAULT_SECURITY_SELINUX"
     _disable "DEFAULT_SECURITY_DAC"
     scripts/config --set-str "LSM" "lockdown,yama,integrity,selinux,bpf,landlock"
-    msg2 "ZRAM/ZSWAP activation for Fedora"
+    msg2 "SwapOnZRAM activation for Fedora"
     # remove Arch configuration
     _disable "ZRAM_DEF_COMP_ZSTD"
     _undefine "ZRAM_DEF_COMP"
@@ -1772,6 +1772,8 @@ CONFIG_DEBUG_INFO_BTF_MODULES=y\r
     _disable "ZSWAP_DEFAULT_ON"
     _undefine "ZSWAP_COMPRESSOR_DEFAULT_ZSTD"
 		_disable "ZSWAP_ZPOOL_DEFAULT_ZSMALLOC"
+		# remove tkg configuration, ligne 920 here
+		_undefine "ZSWAP_COMPRESSOR_DEFAULT_LZ4"
 		# Add Fedora configuration
     _enable "ZRAM_DEF_COMP_LZORLE"
     _module "ZRAM"
