@@ -249,6 +249,10 @@ if [ "$1" = "install" ]; then
     msg2 "Add patched files to the diff.patch"
     (cd ${_kernel_work_folder_abs} && git add -- . ':!rpmbuild')
 
+    msg2 "Fix default kernel configuration to allow automated configuration for SwapOnZRAM for Fedora"
+    sed -i 's/CONFIG_ZSWAP_COMPRESSOR_DEFAULT=zstd/CONFIG_ZSWAP_COMPRESSOR_DEFAULT=lzo/' linux-src-git/include/config/auto.conf
+    sed -i 's/CONFIG_ZSWAP_COMPRESSOR_DEFAULT_ZSTD=y/CONFIG_ZSWAP_COMPRESSOR_DEFAULT_LZO=y/' linux-src-git/include/config/auto.conf
+
     msg2 "Building kernel RPM packages"
     RPMOPTS="--define '_topdir ${_fedora_work_dir}'" make ${llvm_opt} -j ${_thread_num} rpm-pkg EXTRAVERSION="${_extra_ver_str}"
     msg2 "Building successfully finished!"
