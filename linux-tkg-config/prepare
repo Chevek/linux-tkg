@@ -1773,7 +1773,7 @@ CONFIG_DEBUG_INFO_BTF_MODULES=y\r
     _undefine "ZSWAP_COMPRESSOR_DEFAULT_ZSTD"
 		_disable "ZSWAP_ZPOOL_DEFAULT_ZSMALLOC"
 		# remove tkg configuration, ligne 920 here
-		# _undefine "ZSWAP_COMPRESSOR_DEFAULT_LZ4"
+		_undefine "ZSWAP_COMPRESSOR_DEFAULT_LZ4"
 		# Add Fedora configuration
 		_enable "SWAP"
     _enable "ZRAM_DEF_COMP_LZORLE"
