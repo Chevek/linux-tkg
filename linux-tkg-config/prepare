@@ -917,14 +917,9 @@ _tkg_srcprep() {
     scripts/config --set-val "RCU_BOOST_DELAY" "0"
   fi
   _disable "NTP_PPS" "ZSWAP_COMPRESSOR_DEFAULT_LZO" "PROFILE_ALL_BRANCHES"
-  _enable "CRYPTO_LZ4" "CRYPTO_LZ4HC" "LZ4_COMPRESS" "LZ4HC_COMPRESS" "X86_AMD_PSTATE" "AMD_PINCTRL"
-  if ! [ "$_distro" = "Fedora" ] ; then
-    _enable "ZSWAP_COMPRESSOR_DEFAULT_LZ4"
-  fi
+  _enable "CRYPTO_LZ4" "CRYPTO_LZ4HC" "LZ4_COMPRESS" "LZ4HC_COMPRESS" "ZSWAP_COMPRESSOR_DEFAULT_LZ4" "X86_AMD_PSTATE" "AMD_PINCTRL"
   _disable "DEBUG_FORCE_FUNCTION_ALIGN_64B" "X86_P6_NOP" "RCU_STRICT_GRACE_PERIOD"
-  if ! [ "$_distro" = "Fedora" ] ; then
-    scripts/config --set-str "ZSWAP_COMPRESSOR_DEFAULT" "lz4"
-  fi
+  scripts/config --set-str "ZSWAP_COMPRESSOR_DEFAULT" "lz4"
   _enable "CPU_FREQ_DEFAULT_GOV_SCHEDUTIL"
   _disable "CPU_FREQ_DEFAULT_GOV_ONDEMAND" "CPU_FREQ_DEFAULT_GOV_CONSERVATIVE" "CPU_FREQ_DEFAULT_GOV_PERFORMANCE" "CPU_FREQ_DEFAULT_GOV_PERFORMANCE_NODEF"
   _module "BLK_DEV_LOOP"
@@ -1780,6 +1775,7 @@ CONFIG_DEBUG_INFO_BTF_MODULES=y\r
 		# remove tkg configuration, ligne 920 here
 		# _undefine "ZSWAP_COMPRESSOR_DEFAULT_LZ4"
 		# Add Fedora configuration
+		_enable "SWAP"
     _enable "ZRAM_DEF_COMP_LZORLE"
     _module "ZRAM"
     _enable "ZRAM_MULTI_COMP"
