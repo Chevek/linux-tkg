@@ -1,4 +1,30 @@
 ## Fix for Fedora 39 with kernel 6.6
+Issue:
+https://github.com/Frogging-Family/linux-tkg/issues/383
+
+Test it:
+
+    git clone https://github.com/Chevek/linux-tkg.git
+    cd linux-tkg/
+    git checkout F39
+    ./install.sh install
+
+Next choice:
+1) Fedora
+
+Choose 1 (Fedora)
+
+Later:
+
+      1. Deflate (ZSWAP_COMPRESSOR_DEFAULT_DEFLATE)
+    > 2. LZO (ZSWAP_COMPRESSOR_DEFAULT_LZO)
+      3. 842 (ZSWAP_COMPRESSOR_DEFAULT_842)
+      4. LZ4 (ZSWAP_COMPRESSOR_DEFAULT_LZ4)
+      5. LZ4HC (ZSWAP_COMPRESSOR_DEFAULT_LZ4HC)
+      6. zstd (ZSWAP_COMPRESSOR_DEFAULT_ZSTD) (NEW)
+    choice[1-6?]: 
+
+Choose 2 (LZO).
 
 ## linux-tkg
 
